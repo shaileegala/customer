@@ -34,6 +34,6 @@ public class CustomerController {
 
     @PutMapping("{customerName}")
     public void updateCustomer(@PathVariable("customerName") String name){
-        customerService.updateCustomer(name);
+        //customerService.updateCustomer(name);
     }
 }
