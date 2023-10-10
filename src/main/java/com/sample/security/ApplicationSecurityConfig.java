@@ -25,6 +25,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import static com.sample.security.ApplicationUserRole.ADMIN;
+import static com.sample.security.ApplicationUserRole.USER;
+
 @Configuration
 @EnableWebSecurity
 public class ApplicationSecurityConfig {
@@ -49,6 +52,7 @@ public class ApplicationSecurityConfig {
             ((AuthorizeHttpRequestsConfigurer.AuthorizedUrl)requests
                     .requestMatchers("/","index.html","/css/*","/js/*")
                     .permitAll()
+                    .requestMatchers("/api/**").hasRole(USER.name())
                     .anyRequest())
                     .authenticated();
                     //.authenticationProvider(authenticationProvider());
@@ -87,9 +91,15 @@ public class ApplicationSecurityConfig {
         UserDetails newUser = User.builder()
                 .username("user")
                 .password(passwordEncoder().encode("user"))
-                .roles("USER") //"ROLE_USER"
+                .roles(USER.name()) //"ROLE_USER"
                 .build();
-        return new InMemoryUserDetailsManager(newUser);
+
+        UserDetails newAdmin = User.builder()
+                .username("admin")
+                .password(passwordEncoder().encode("admin"))
+                .roles(ADMIN.name()) //"ROLE_ADMIN"
+                .build();
+        return new InMemoryUserDetailsManager(newUser, newAdmin);
     }
 
 }
